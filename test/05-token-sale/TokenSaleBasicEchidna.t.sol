@@ -21,6 +21,10 @@ interface IHevm {
 contract TokenSaleBasicEchidna {
     IHevm hevm = IHevm(address(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D));
 
+    event creatorbal(uint256 bal);
+    event soldTokens(uint256 soldtokens);
+    
+
     uint8 private constant SELL_DECIMALS = 18;
     uint8 private constant BUY_DECIMALS  = 6;
 
@@ -121,7 +125,7 @@ contract TokenSaleBasicEchidna {
     // 1) the amount of tokens bought (received by this contract)
     //    should equal the amount of tokens sold as the exchange
     //    rate is 1:1, when accounted for precision difference
-    function invariant_tokens_bought_eq_tokens_sold() public view returns(bool) {
+    function invariant_tokens_bought_eq_tokens_sold() public  returns(bool) {
         uint256 soldAmount = tokenSale.getSellTokenSoldAmount();
         uint256 boughtBal  = buyToken.balanceOf(address(this));
 
@@ -133,6 +137,8 @@ contract TokenSaleBasicEchidna {
         // audit there was a precision miscalculation that allowed
         // an attacker to buy the sale tokens without paying due to
         // rounding down to zero
+        emit creatorbal(boughtBal);
+        emit soldTokens(soldAmount);
         return(boughtBal == soldAmount);
     }
 

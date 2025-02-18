@@ -245,9 +245,13 @@ contract TokenSale {
 
 
     // handles conversions
+    // amount 500e6, 6
+    // if 500e6/10^(18-6) == 500e6/10^12 == 0
+    // // amount 500e20, 20
+    // else if 500e20 * 10^(20-18) == 500e20 * 10^(2)
     function _convert(uint256 amount_, uint256 destDecimals_) internal pure returns (uint256) {
         if (SELL_PRECISION > destDecimals_) {
-            amount_ = amount_ / 10 ** (SELL_PRECISION - destDecimals_);
+            amount_ = (amount_ * 10**SELL_PRECISION) / 10**destDecimals_;
         } else if (SELL_PRECISION < destDecimals_) {
             amount_ = amount_ * 10 ** (destDecimals_ - SELL_PRECISION);
         }
@@ -258,3 +262,9 @@ contract TokenSale {
 
 
 }
+
+        // uint256 amount = _convert(amountToBuy, s_buyToken.decimals());
+        // require(amount > 0, "TS: Converted amount too small");
+
+
+        //  amount_ = amount_ / 10 ** (SELL_PRECISION - destDecimals_);

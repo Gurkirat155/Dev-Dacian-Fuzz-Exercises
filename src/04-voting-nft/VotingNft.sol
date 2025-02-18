@@ -31,6 +31,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 // not be used in any live/production environment; it is purely an
 // educational bug-hunting exercise based on a real-world example.
 //
+
+// @audit @INVARIANT Over the time the nft power will less than or equal to the current power
+
 contract VotingNft is ERC721Enumerable, Ownable {
 
     // useful constants
