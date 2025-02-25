@@ -251,7 +251,8 @@ contract TokenSale {
     // else if 500e20 * 10^(20-18) == 500e20 * 10^(2)
     function _convert(uint256 amount_, uint256 destDecimals_) internal pure returns (uint256) {
         if (SELL_PRECISION > destDecimals_) {
-            amount_ = (amount_ * 10**SELL_PRECISION) / 10**destDecimals_;
+            // amount_ = (amount_ * 10**SELL_PRECISION) / 10**destDecimals_;
+            amount_ = amount_ / 10 ** (SELL_PRECISION - destDecimals_);
         } else if (SELL_PRECISION < destDecimals_) {
             amount_ = amount_ * 10 ** (destDecimals_ - SELL_PRECISION);
         }

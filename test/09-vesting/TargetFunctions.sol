@@ -5,6 +5,12 @@ import { Properties } from "./Properties.sol";
 import { BaseTargetFunctions } from "@chimera/BaseTargetFunctions.sol";
 import { IHevm, vm } from "@chimera/Hevm.sol";
 
+event toAddress(address);
+event pointsTransfer(uint24);
+event beforeBalance(uint24);
+event afterBalance(uint24);
+event senderAddress(address);
+
 abstract contract TargetFunctions is BaseTargetFunctions, Properties {
 
     function handler_transferPoints(uint256 recipientIndex,
@@ -27,7 +33,19 @@ abstract contract TargetFunctions is BaseTargetFunctions, Properties {
 
         // note: using `vm` from Chimera's IHevm
         // for cross-fuzzer cheatcode compatibility
-        vm.prank(sender);
-        vesting.transferPoints(recipient, pointsToTransfer);
+        emit toAddress(recipient);
+        emit senderAddress(sender);
+        emit pointsTransfer(pointsToTransfer);
+        (uint24 bBal,,) = vesting.allocations(recipient);
+        emit beforeBalance(bBal);
+        
+        require(pointsToTransfer != 0,"Points should bot be zero 0");
+        // if(pointsToTransfer != 0){
+            vm.prank(sender);
+            vesting.transferPoints(recipient, pointsToTransfer);
+        // }
+        (uint24 aBal,,) = vesting.allocations(recipient);
+        emit afterBalance(aBal);
+        
     }
 }

@@ -41,7 +41,8 @@ contract Vesting {
     // another address if they haven't claimed
     function transferPoints(address to, uint24 points) external {
         require(points != 0, "Zero points invalid");
-
+        require(to != address(0), "Address should not be zero");
+        require(msg.sender != to, "Cannot self transfer");
         AllocationData memory fromAllocation = allocations[msg.sender];
         require(fromAllocation.points >= points, "Insufficient points");
         require(!fromAllocation.claimed, "Already claimed");
@@ -63,3 +64,7 @@ contract Vesting {
         }
     }
 }
+
+
+// @invariant First invariant that TOTAL_POINTS_PCT should not be greater than 100_000
+// @invariant Any user should not be able to transfer after they have claimed
