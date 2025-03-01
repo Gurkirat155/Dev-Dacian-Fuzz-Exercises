@@ -16,11 +16,19 @@ contract OperatorRegistry {
         operatorAddressToId[msg.sender] = newOperatorId;
         operatorIdToAddress[newOperatorId] = msg.sender;
     }
+    /*
+        0x20 = 1
+        1 = 0x20
+
+        0x10 = 2
+        2 = 0x10
+    */
 
     // an operator can update their address
     function updateAddress(address newOperatorAddress) external {
         require(msg.sender != newOperatorAddress, "Updated address must be different");
-
+        // @audit added a require statement to check if the new Address that is being added should not be registered
+        require(operatorAddressToId[newOperatorAddress] == 0, "Address already registered");
         uint128 operatorId = _getOperatorIdSafe(msg.sender);
 
         operatorAddressToId[newOperatorAddress] = operatorId;
