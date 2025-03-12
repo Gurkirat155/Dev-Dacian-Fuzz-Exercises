@@ -39,10 +39,11 @@ contract LiquidateDos is ILiquidateDos {
         uint8 userActiveMarketsNum = uint8(userActiveMarkets[user].length());
         if(userActiveMarketsNum == 0) revert LiquidateUserNotInAnyMarkets();
 
+        uint256[] memory userMarketIds = userActiveMarkets[user].values();
+        
         // in our simple implementation users are always liquidated
         for(uint8 i; i<userActiveMarketsNum; i++) {
-            uint8 marketId = uint8(userActiveMarkets[user].at(i));
-            userActiveMarkets[user].remove(marketId);
+            userActiveMarkets[user].remove(userMarketIds[i]);
         }
     }
 
@@ -50,3 +51,32 @@ contract LiquidateDos is ILiquidateDos {
         isActive = userActiveMarkets[user].contains(marketId);
     }
 }
+
+    // function liquidate(address user) external {
+    //     if(!liquidationsEnabled) revert LiquidationsDisabled();
+
+    //     uint8 userActiveMarketsNum = uint8(userActiveMarkets[user].length());
+    //     if(userActiveMarketsNum == 0) revert LiquidateUserNotInAnyMarkets();
+
+    //     // in our simple implementation users are always liquidated
+    //     for(uint8 i; i<userActiveMarketsNum; i++) {
+    //         uint8 marketId = uint8(userActiveMarkets[user].at(i));
+    //         userActiveMarkets[user].remove(marketId);
+    //     }
+    // }
+
+
+
+    // function liquidate(address user) external {
+    //     if(!liquidationsEnabled) revert LiquidationsDisabled();
+
+    //     uint8 userActiveMarketsNum = uint8(userActiveMarkets[user].length());
+    //     if(userActiveMarketsNum == 0) revert LiquidateUserNotInAnyMarkets();
+
+    //     uint256[] memory userMarketIds = userActiveMarkets[user].values();
+        
+    //     // in our simple implementation users are always liquidated
+    //     for(uint8 i; i<userActiveMarketsNum; i++) {
+    //         userActiveMarkets[user].remove(userMarketIds[i]);
+    //     }
+    // }
